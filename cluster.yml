@@ -3,9 +3,17 @@ kind: ClusterConfig
 
 metadata:
   name: airflow
-  region: eu-west-3
-  version: "1.16"
-
+  region: us-east-2
+  version: "1.21"
+vpc:
+  subnets:
+    private:
+      us-east-2b: { id: subnet-0425cbf9aa121e671 }
+      us-east-2c: { id: subnet-07accfda00d1f3be0 }
+    public:
+      us-east-2b: { id: subnet-0293727f }
+      us-east-2c: { id: subnet-2398d16f }
+      
 managedNodeGroups:
   - name: workers
     instanceType: t3.medium
