@@ -1,5 +1,5 @@
 # getting the cluster name
-CLUSTER_NAME=`eksctl get cluster | sed -n '2p' | sed -e 's/\s.*$//'`
+CLUSTER_NAME="airflow"
 
 # getting the VPC ID where nodes are deployed
 VPC_ID=$(aws eks describe-cluster --name $CLUSTER_NAME --query "cluster.resourcesVpcConfig.vpcId" --output text)
@@ -31,7 +31,7 @@ watch aws efs describe-file-systems --file-system-id $FILE_SYSTEM_ID
 TAG1=tag:kubernetes.io/cluster/$CLUSTER_NAME
 TAG2=tag:kubernetes.io/role/internal-elb
 
-subnets=$(aws ec2 describe-subnets --filters "Name=$TAG1,Values=shared" "Name=$TAG2,Values=1" | jq --raw-output '.Subnets[].SubnetId')
+subnets=$(aws ec2 describe-subnets --filters "Name=$TAG1,Values=shared"  | jq --raw-output '.Subnets[].SubnetId')
 
 for subnet in ${subnets[@]}
 do

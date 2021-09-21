@@ -3,13 +3,19 @@
 MATERIALS=airflow-materials-aws
 
 # SET YOUR values
-GIT_USERNAME=marclamberti
-GIT_TOKEN=cb53803446b0968e132e2e8ff729c7596fb0d7c8
-S3_BUCKET_NAME_DEV=airflow-dev-codepipeline-artifacts
-S3_BUCKET_NAME_STAGING=airflow-staging-codepipeline-artifacts
+GIT_USERNAME=mail2tvskc
+GIT_TOKEN=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
+S3_BUCKET_NAME_DEV=ostslab-airflow-dev-codepipeline-artifacts
+S3_BUCKET_NAME_STAGING=ostslab-airflow-staging-codepipeline-artifacts
 
 # ----------------------------- Start the EKS Cluster
 eksctl create cluster -f $MATERIALS/cluster.yml
+eksctl utils associate-iam-oidc-provider --region=us-east-2 --cluster=airflow --approve
+eksctl create iamserviceaccount --name external-dns --namespace kube-system --cluster airflow --attach-policy-arn arn:aws:iam::842532286493:policy/AllowExternalDNSUpdates  --approve
+kubectl create secret tls airflow-ssl --cert=cacert.pem --key=private.pem -n dev
+kubectl create secret tls airflow-ssl --cert=cacert.pem --key=private.pem -n staging
+kubectl create secret tls airflow-ssl --cert=cacert.pem --key=private.pem -n impl
+
 
 # ----------------------------- Create CI/CD pipelines
 # S3 Buckets and ECRs are created from the pipelines
